@@ -1,7 +1,8 @@
 golapa
 ------
 
-** Instructions **
+**Instructions**
+
 1. Setup a new AppEngine project.
 
 2. Edit app.yaml at the base of this project and change `<PROJECT-ID-HERE>` to your AppEngine Project ID.
