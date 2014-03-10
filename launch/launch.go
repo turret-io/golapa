@@ -4,7 +4,6 @@ import (
 	"appengine"
 	"appengine/taskqueue"
 	_ "appengine/urlfetch"
-	"bytes"
 	"crypto/hmac"
 	"crypto/sha512"
 	"html/template"

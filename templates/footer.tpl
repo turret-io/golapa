@@ -24,9 +24,6 @@
 
 <script type="text/javascript">
     jQuery(document).ready(function(){
-        jQuery(".button-signup").off('click').on('click', function(){
-            jQuery("body").animate({scrollTop:160});
-        });
         jQuery(".submit-signup").off('submit').on('submit', function(e){
             var errors = Array();
             jQuery(e.target).find(":input").each(function(k,v) {
