@@ -1,0 +1,20 @@
+application: <PROJECT-ID-HERE> 
+version: 1
+runtime: go
+api_version: go1
+
+handlers:
+- url: /css
+  static_dir: css
+
+- url: /js
+  static_dir: js
+
+- url: /images
+  static_dir: images
+
+- url: /fonts
+  static_dir: fonts
+
+- url: /.*
+  script: _go_app
