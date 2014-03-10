@@ -1,0 +1,4 @@
+New Signup:
+
+{{.name}}
+{{.email}}
