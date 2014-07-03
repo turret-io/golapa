@@ -8,7 +8,6 @@ import (
 	"html/template"
 	"net/http"
 	"net/url"
-    "github.com/turretIO/turret-io-go"
     "fmt"
 )
 
@@ -60,6 +59,7 @@ func EmailSubmitter(w http.ResponseWriter, r *http.Request) {
 
 }
 
+/*
 func TurretIOSubmitter(w http.ResponseWriter, r *http.Request) {
     // Add new user to Turret.IO with "signedup" attribute set to "1"
     c := appengine.NewContext(r)
@@ -72,6 +72,7 @@ func TurretIOSubmitter(w http.ResponseWriter, r *http.Request) {
     }
     fmt.Println(resp)
 }
+*/
 
 func MainHandler(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)

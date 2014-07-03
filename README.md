@@ -34,11 +34,33 @@ Golapa now supports Turret.IO as an alternative to sending an email when a user 
 > export GOPATH=~/golapa
 ```
 
+* Get the Turret.IO Go client
+```
+> go get github.com/turretIO/turret-io-go
+```
+
+* Add the Turret.IO Go client library to the list of imports in `launch/launch.go`
+```
+import (
+    "appengine"
+    "appengine/taskqueue"
+    "crypto/hmac"
+    "crypto/sha512"
+    "html/template"
+    "net/http"
+    "net/url"
+    "fmt"
+    "github.com/turretIO/turret-io-go"
+)
+```
+
 * Provide your API key and API secret (see https://tws.turret.io/apidoc) in `launch/launch.go`
 ```
 const api_key = string("YOUR TURRET.IO API KEY")
 const api_secret = string("YOUR TURRET.IO API SECRET")
 ```  
+
+* Uncomment the `TurretIOSubmitter` function definition in `launch/launch.go`
 
 * Edit `launch/launch.go` and change `http.HandleFunc("/worker", EmailSubmitter)` to `http.HandleFunc("/worker", TurretIOSubmitter)` 
 
