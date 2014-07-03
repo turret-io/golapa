@@ -3,16 +3,17 @@ package launch
 import (
 	"appengine"
 	"appengine/taskqueue"
-	_ "appengine/urlfetch"
 	"crypto/hmac"
 	"crypto/sha512"
 	"html/template"
 	"net/http"
 	"net/url"
+    "github.com/turretIO/turret-io-go"
+    "fmt"
 )
 
-const api_key = string("")
-const api_secret = string("")
+const api_key = string("YOUR TURRET.IO API KEY")
+const api_secret = string("YOUR TURRET.IO API SECRET")
 
 func init() {
 	http.HandleFunc("/", MainHandler)
@@ -57,6 +58,19 @@ func EmailSubmitter(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
 	SendContactNotification(c, r.FormValue("name"), r.FormValue("email"))
 
+}
+
+func TurretIOSubmitter(w http.ResponseWriter, r *http.Request) {
+    // Add new user to Turret.IO with "signedup" attribute set to "1"
+    c := appengine.NewContext(r)
+    turret := turretIO.NewAppEngineTurretIO(api_key, api_secret, c) 
+    u := turretIO.NewUser(turret)
+    resp, err := u.Set(r.FormValue("email"), map[string]string{"contact_name":r.FormValue("name"), "signedup":"1"}, nil) 
+    if err != nil {
+		http.Error(w, "Internal error", http.StatusInternalServerError)
+		return
+    }
+    fmt.Println(resp)
 }
 
 func MainHandler(w http.ResponseWriter, r *http.Request) {
