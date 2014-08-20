@@ -7,7 +7,6 @@ import (
 	"net/url"
 	"log"
 	"os"
-	"time"
 )
 
 type RequestHandler interface {
@@ -50,7 +49,6 @@ func (srh *StandardRequestHandler) Post(w http.ResponseWriter,  r *http.Request,
 				log.Print("Could not create email: %v", err)
 			}
 			mailer.Send(msg)
-			time.Sleep(5000 * time.Millisecond)
 			
 
 		// OK
