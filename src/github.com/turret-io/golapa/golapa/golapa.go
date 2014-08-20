@@ -58,7 +58,7 @@ func (srh *StandardRequestHandler) Post(w http.ResponseWriter,  r *http.Request,
 		// OK
 	}
 	tpl.Lookup("post.tpl").Execute(w, data)
-
+}
 
 
 type BaseHandler struct {
