@@ -43,8 +43,7 @@ func (srh *StandardRequestHandler) Post(w http.ResponseWriter,  r *http.Request,
 		log.Print(email)
 
 
-		// Create goroutine to send email via
-		go func(){
+		// @TODO Use ENVVAR to send via email or TurretIO 
 			mailer := &StandardEmailer{template_path}
 			msg, err := mailer.CreateMessage(sender, subject, r.FormValue("name"), r.FormValue("email"))
 			if err != nil {
@@ -53,7 +52,6 @@ func (srh *StandardRequestHandler) Post(w http.ResponseWriter,  r *http.Request,
 			mailer.Send(msg)
 			time.Sleep(5000 * time.Millisecond)
 			
-		}()
 
 		// OK
 	}
