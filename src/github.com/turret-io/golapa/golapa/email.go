@@ -8,7 +8,6 @@ import (
 	"net/smtp"
 	"crypto/tls"
 	_ "crypto/sha512"
-	"net"
 	"time"
 	"log"
 	"encoding/base64"
