@@ -30,7 +30,8 @@ func (msg *Message) ToMessage() ([]byte) {
 	b.Write([]byte(fmt.Sprintf("Subject: =?utf-8?B?%s?=\r\n", base64.URLEncoding.EncodeToString([]byte(msg.Subject)))))
 	b.Write([]byte(fmt.Sprintf("Date: %s\r\n", curDateTime)))
 	b.Write([]byte(fmt.Sprintf("From: %s\r\n", msg.Sender)))
-	b.Write([]byte(fmt.Sprintf("To: %s\r\n", msg.To)))
+	b.Write([]byte(fmt.Sprintf("To: %s\r\n\r\n", msg.To)))
+	b.Write([]byte(fmt.Sprintf("%s", msg.Body)))
 
 	return b.Bytes()
 }
