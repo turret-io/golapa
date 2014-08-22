@@ -6,6 +6,8 @@ import (
 	"text/template"
 	"os"
 	"net/smtp"
+	"crypto/tls"
+	_ "crypto/sha512"
 	"net"
 	"time"
 	"log"
@@ -19,7 +21,7 @@ type Message struct {
 	Body	string
 }
 
-func (msg *Message) toMessage() ([]byte) {
+func (msg *Message) ToMessage() ([]byte) {
 	var b bytes.Buffer
 	t := time.Now()
 	curDateTime := t.UTC().Format(time.RFC1123Z)
@@ -46,15 +48,26 @@ func (se *StandardEmailer) Send(msg *Message) {
 	host := os.Getenv("EMAIL_HOST")
 	password := os.Getenv("EMAIL_PASSWORD")
 	from := os.Getenv("EMAIL_FROM")
+	ssl := os.Getenv("EMAIL_SSL")
+
 	hostPart, _, err := net.SplitHostPort(host)
 	if err != nil {
 		log.Print(err.Error())
 	}
 	auth := smtp.PlainAuth("", from, password, hostPart)
 
-	err = smtp.SendMail(host, auth, from, msg.To, msg.toMessage())
-	if err != nil {
-		log.Print(err.Error())
+	if ssl == "" {
+		err = smtp.SendMail(host, auth, from, msg.To, msg.ToMessage())
+		if err != nil {
+			log.Print(err.Error())
+		}
+	}
+
+	if ssl == "true" {
+		err = se.SendMailSSL(host, auth, from, msg.To, msg.ToMessage())
+		if err != nil {
+			log.Print(err.Error())
+		}
 	}
 }
 
@@ -76,4 +89,59 @@ func (se *StandardEmailer) CreateMessage(sender string, subject string, name str
 		Subject: subject,
 		Body: string(body.Bytes()),
 	}, nil
+}
+
+func (se *StandardEmailer) SendMailSSL(host string, auth smtp.Auth, from string, recipients []string, msg []byte) (error) {
+	conn, err := tls.Dial("tcp", host, nil)
+	if err != nil {
+		log.Print(err.Error())
+		return err
+	}
+
+	c, err := smtp.NewClient(conn, host)
+	if err != nil {
+		log.Print(err.Error())
+		return err
+	}
+
+	err = c.Auth(auth)
+	if err != nil {
+		log.Print(err.Error())
+		return err
+	}
+
+	err = c.Mail(from)
+	if err != nil {
+		log.Print(err.Error())
+		return err
+	}
+
+	for _, addr := range recipients {
+		err = c.Rcpt(addr)
+		if err != nil {
+			log.Print(err.Error())
+			return err
+		}
+	}
+
+	d, err := c.Data()
+	if err != nil {
+		log.Print(err.Error())
+		return err
+	}
+
+	_, err = d.Write(msg)
+	if err != nil {
+		log.Print(err.Error())
+		return err
+	}
+
+	err = d.Close()
+	if err != nil {
+		log.Print(err.Error())
+		return err
+	}
+
+	c.Quit()
+	return nil
 }
