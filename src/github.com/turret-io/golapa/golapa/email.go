@@ -16,7 +16,7 @@ import (
 
 type Message struct {
 	Sender string
-	To	[]string
+	To	string
 	Subject string
 	Body	string
 }
