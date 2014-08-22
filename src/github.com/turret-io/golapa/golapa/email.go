@@ -57,14 +57,14 @@ func (se *StandardEmailer) Send(msg *Message) {
 	auth := smtp.PlainAuth("", from, password, hostPart)
 
 	if ssl == "" {
-		err = smtp.SendMail(host, auth, from, msg.To, msg.ToMessage())
+		err = smtp.SendMail(host, auth, from, []string{msg.To}, msg.ToMessage())
 		if err != nil {
 			log.Print(err.Error())
 		}
 	}
 
 	if ssl == "true" {
-		err = se.SendMailSSL(host, auth, from, msg.To, msg.ToMessage())
+		err = se.SendMailSSL(host, auth, from, []string{msg.To}, msg.ToMessage())
 		if err != nil {
 			log.Print(err.Error())
 		}
