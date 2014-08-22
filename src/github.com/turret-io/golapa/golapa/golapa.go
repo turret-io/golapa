@@ -7,7 +7,6 @@ import (
 	"net/url"
 	"log"
 	"os"
-	"time"
 )
 
 type RequestHandler interface {
@@ -43,17 +42,14 @@ func (srh *StandardRequestHandler) Post(w http.ResponseWriter,  r *http.Request,
 		log.Print(email)
 
 
-		// Create goroutine to send email via
-		go func(){
+		// @TODO Use ENVVAR to send via email or TurretIO 
 			mailer := &StandardEmailer{template_path}
 			msg, err := mailer.CreateMessage(sender, subject, r.FormValue("name"), r.FormValue("email"))
 			if err != nil {
 				log.Print("Could not create email: %v", err)
 			}
 			mailer.Send(msg)
-			time.Sleep(5000 * time.Millisecond)
 			
-		}()
 
 		// OK
 	}
