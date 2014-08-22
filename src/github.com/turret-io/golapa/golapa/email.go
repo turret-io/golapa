@@ -26,11 +26,11 @@ func (msg *Message) ToMessage() ([]byte) {
 	t := time.Now()
 	curDateTime := t.UTC().Format(time.RFC1123Z)
 
-	b.Write([]byte(fmt.Sprintf("Sender: %s \r\n", msg.Sender)))
+	b.Write([]byte(fmt.Sprintf("Sender: %s\r\n", msg.Sender)))
 	b.Write([]byte(fmt.Sprintf("Reply-To: %s\r\n", msg.Sender)))
 	b.Write([]byte(fmt.Sprintf("Subject: =?utf-8?B?%s?=\r\n", base64.URLEncoding.EncodeToString([]byte(msg.Subject)))))
 	b.Write([]byte(fmt.Sprintf("Date: %s\r\n", curDateTime)))
-	b.Write([]byte(fmt.Sprintf("From: %s %s\r\n", msg.Sender)))
+	b.Write([]byte(fmt.Sprintf("From: %s\r\n", msg.Sender)))
 	b.Write([]byte(fmt.Sprintf("To: %s\r\n", msg.To)))
 
 	return b.Bytes()
@@ -71,7 +71,7 @@ func (se *StandardEmailer) Send(msg *Message) {
 	}
 }
 
-func (se *StandardEmailer) CreateMessage(sender string, subject string, name string, email string) (*Message, error) {
+func (se *StandardEmailer) CreateMessage(sender string, subject string, to string, name string, email string) (*Message, error) {
 	tpl, err := template.ParseFiles(fmt.Sprintf("%s/email.tpl", se.TemplatePath))
 	if err != nil {
 		return nil, err
@@ -82,10 +82,10 @@ func (se *StandardEmailer) CreateMessage(sender string, subject string, name str
 
 	var body bytes.Buffer
 	tpl.Execute(&body, kv)
-
+	log.Print(string(body.Bytes()))
 	return &Message{
 		Sender: sender,
-		To: []string{email},
+		To: to,
 		Subject: subject,
 		Body: string(body.Bytes()),
 	}, nil

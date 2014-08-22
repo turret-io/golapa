@@ -31,6 +31,7 @@ func (srh *StandardRequestHandler) Get(w http.ResponseWriter, r *http.Request, n
 func (srh *StandardRequestHandler) Post(w http.ResponseWriter,  r *http.Request, tpl *template.Template, data url.Values, template_path string) {
 	sender := os.Getenv("EMAIL_SENDER")
 	subject := os.Getenv("EMAIL_SUBJECT")
+	to := os.Getenv("EMAIL_TO")
 
 	email := data.Get("email")
 	name := data.Get("name")
@@ -44,7 +45,7 @@ func (srh *StandardRequestHandler) Post(w http.ResponseWriter,  r *http.Request,
 
 		// @TODO Use ENVVAR to send via email or TurretIO 
 			mailer := &StandardEmailer{template_path}
-			msg, err := mailer.CreateMessage(sender, subject, r.FormValue("name"), r.FormValue("email"))
+			msg, err := mailer.CreateMessage(sender, subject, to, r.FormValue("name"), r.FormValue("email"))
 			if err != nil {
 				log.Print("Could not create email: %v", err)
 			}
