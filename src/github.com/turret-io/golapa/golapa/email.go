@@ -50,20 +50,18 @@ func (se *StandardEmailer) Send(msg *Message) {
 	ssl := os.Getenv("EMAIL_SSL")
 
 	//hostPart, _, err := net.SplitHostPort(host)
-	if err != nil {
-		log.Print(err.Error())
-	}
+
 	auth := smtp.PlainAuth("", from, password, host)
 
 	if ssl == "" {
-		err = smtp.SendMail(host, auth, from, []string{msg.To}, msg.ToMessage())
+		err := smtp.SendMail(host, auth, from, []string{msg.To}, msg.ToMessage())
 		if err != nil {
 			log.Print(err.Error())
 		}
 	}
 
 	if ssl == "true" {
-		err = se.SendMailSSL(host, auth, from, []string{msg.To}, msg.ToMessage())
+		err := se.SendMailSSL(host, auth, from, []string{msg.To}, msg.ToMessage())
 		if err != nil {
 			log.Print(err.Error())
 		}
