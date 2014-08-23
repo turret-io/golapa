@@ -43,22 +43,24 @@ func main() {
 				}
 
 				if via == "turret_io" {
-					var payload map[string]string
-					err = json.Unmarshal(data, &payload)
-					if err != nil {
-						log.Print(err.Error())
-					}
+						var payload map[string]string
+						err = json.Unmarshal(data, &payload)
+						if err != nil {
+								log.Print(err.Error())
+						}
 
-					attr_map := make(map[string]string)
-					prop_map := make(map[string]string)
-					prop_map["full_name"] = payload["name"]
+						attr_map := make(map[string]string)
+						prop_map := make(map[string]string)
+						attr_map["contact_name"] = payload["name"]
+						attr_map["signedup"] = "1"
 
-					turret := turretIO.NewTurretIO(api_key, api_secret)
-					inst := turretIO.NewUser(turret)
-					_, err := inst.Set(payload["email"], attr_map, prop_map)
-					if err != nil {
-						log.Print(err.Error())
-					}
+						turret := turretIO.NewTurretIO(api_key, api_secret)
+						inst := turretIO.NewUser(turret)
+						resp, err := inst.Set(payload["email"], attr_map, prop_map)
+						log.Print(resp)
+						if err != nil {
+								log.Print(err.Error())
+						}
 				}
 
         }
