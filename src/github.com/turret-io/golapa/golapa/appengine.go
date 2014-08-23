@@ -5,15 +5,15 @@ package golapa
 import (
 	"appengine"
 	"appengine/taskqueue"
+	"appengine/mail"
 	_ "fmt"
 	"net/url"
 	"net/http"
 	"text/template"
-	"appengine/mail"
 )
 
 const sender = "<APPENGINE-EMAIL-SENDER>"
-const recipient = "<RECIPIENT>"
+const to = "<RECIPIENT>"
 const subject = "New signup"
 
 func init() {
@@ -43,7 +43,7 @@ func (aee *AppEngineEmailer) ServeHTTP(w http.ResponseWriter, req *http.Request)
 	// handle worker requests
 	ctx := appengine.NewContext(req)
 	aee.ctx = ctx
-	msg, err := aee.CreateMessage(sender, subject, req.FormValue("name"), req.FormValue("email"))
+	msg, err := aee.CreateMessage(sender, subject, to, req.FormValue("name"), req.FormValue("email"))
 	if err != nil {
 		ctx.Errorf("Could not create email: %v", err)
 	}

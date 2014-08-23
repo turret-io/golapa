@@ -7,6 +7,8 @@ import (
 	"net/url"
 	"log"
 	"os"
+	"encoding/json"
+	"github.com/garyburd/redigo/redis"
 )
 
 type RequestHandler interface {
@@ -32,6 +34,7 @@ func (srh *StandardRequestHandler) Post(w http.ResponseWriter,  r *http.Request,
 	sender := os.Getenv("EMAIL_SENDER")
 	subject := os.Getenv("EMAIL_SUBJECT")
 	to := os.Getenv("EMAIL_TO")
+	via := os.Getenv("SEND_VIA")
 
 	email := data.Get("email")
 	name := data.Get("name")
@@ -42,17 +45,29 @@ func (srh *StandardRequestHandler) Post(w http.ResponseWriter,  r *http.Request,
 		log.Print(name)
 		log.Print(email)
 
+		if via == "email" {
 
-		// @TODO Use ENVVAR to send via email or TurretIO 
 			mailer := &StandardEmailer{template_path}
 			msg, err := mailer.CreateMessage(sender, subject, to, r.FormValue("name"), r.FormValue("email"))
 			if err != nil {
 				log.Print("Could not create email: %v", err)
 			}
-			mailer.Send(msg)
-			
 
-		// OK
+			// JSON encode
+			json, err := json.Marshal(msg)
+			if err != nil {
+				log.Print(err)
+			}
+
+			if err == nil {
+				PushToRedis("email_worker", json)
+			}
+
+		}
+
+		if via == "turret_io" {
+
+		}
 	}
 	tpl.Lookup("post.tpl").Execute(w, data)
 }
@@ -87,4 +102,17 @@ func (bh *BaseHandler) serve(w http.ResponseWriter, r *http.Request, rh RequestH
 	default:
 		http.Error(w, "Method not implemented", http.StatusInternalServerError)
 	}
+}
+
+func PushToRedis(list string, json []byte) (error) {
+	conn, err := redis.Dial("tcp", ":6379")
+	if err != nil {
+		return err
+	}
+
+	defer conn.Close()
+
+	conn.Do("LPUSH", list, json)
+
+	return nil
 }
