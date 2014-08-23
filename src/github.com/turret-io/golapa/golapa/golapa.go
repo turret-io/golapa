@@ -40,7 +40,6 @@ func (srh *StandardRequestHandler) Post(w http.ResponseWriter,  r *http.Request,
 	name := data.Get("name")
 
 
-
 	if name != "" && email != "" {
 		log.Print(name)
 		log.Print(email)
@@ -60,13 +59,20 @@ func (srh *StandardRequestHandler) Post(w http.ResponseWriter,  r *http.Request,
 			}
 
 			if err == nil {
-				PushToRedis("email_worker", json)
+				PushToRedis("signup_worker", json)
 			}
 
 		}
 
 		if via == "turret_io" {
+			json, err := json.Marshal(map[string]string{"name":r.FormValue("name"), "email":r.FormValue("email")})
+			if err != nil {
+				log.Print(err)
+			}
 
+			if err == nil {
+				PushToRedis("signup_worker", json)
+			}
 		}
 	}
 	tpl.Lookup("post.tpl").Execute(w, data)
