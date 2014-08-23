@@ -30,7 +30,7 @@ func main() {
                         panic(err)
                 }
                 mailer := &golapa.StandardEmailer{""}
-				mailer.Send(msg)
+				mailer.Send(&msg)
         }
 
 }
