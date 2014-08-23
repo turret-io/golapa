@@ -29,7 +29,7 @@ func main() {
                 if err != nil {
                         panic(err)
                 }
-                mailer := &StandardEmailer{nil}
+                mailer := &golapa.StandardEmailer{nil}
 				mailer.Send(msg)
         }
 
