@@ -53,7 +53,7 @@ func (aee *AppEngineEmailer) ServeHTTP(w http.ResponseWriter, req *http.Request)
 func (aee *AppEngineEmailer) Send(msg *Message) {
 	message := &mail.Message{
 		Sender: msg.Sender,
-		To: msg.To,
+		To: []string{msg.To},
 		Subject: msg.Subject,
 		Body: msg.Body,
 	}
@@ -94,5 +94,5 @@ type AppEngineHandler struct {
 }
 
 func (aeh *AppEngineHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
-	aeh.BaseHandler.serve(w, req, new(AppEngineRequestHandler))
+	aeh.BaseHandler.Serve(w, req, new(AppEngineRequestHandler))
 }
