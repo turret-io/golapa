@@ -1,20 +1,20 @@
-application: <PROJECT-ID-HERE> 
+application: golapa
 version: 1
 runtime: go
 api_version: go1
 
 handlers:
 - url: /css
-  static_dir: css
+  static_dir: ../static/css
 
 - url: /js
-  static_dir: js
+  static_dir: ../static/js
 
 - url: /images
-  static_dir: images
+  static_dir: ../static/images
 
 - url: /fonts
-  static_dir: fonts
+  static_dir: ../static/fonts
 
 - url: /.*
   script: _go_app
