@@ -35,5 +35,5 @@ if [ ! -d $GOPROJ_PATH ]; then
     mkdir -p $GOPROJ_PATH
 fi
 
-rsync -av $SRC_DIR $GOPROJ_PATH --exclude .git
+rsync -av $SRC_DIR/* $GOPROJ_PATH --exclude .git
 docker build -t turretio/go-runtime docker/go-runtime
