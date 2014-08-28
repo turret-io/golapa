@@ -1,6 +1,8 @@
 golapa
 ------
 
+** OUT OF DATE -- This is in the process of being updated **
+
 **Instructions**
 
 1. Setup a new AppEngine project.
