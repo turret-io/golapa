@@ -19,7 +19,7 @@ if [ "$1" == "-h" ]; then
     exit 0
 fi
 
-docker run --rm --volumes-from=golapa-build-volume -e GOPATH=/data -w=/data turretio/go-runtime go get ./... 
+docker run --rm --volumes-from=golapa-build-volume -e GOPATH=/data -w=/data/src turretio/go-runtime go get ./... 
 docker run --rm --volumes-from=golapa-build-volume -e GOPATH=/data turretio/go-runtime go install github.com/turret-io/golapa/serve
 docker run --rm --volumes-from=golapa-build-volume -e GOPATH=/data turretio/go-runtime go install github.com/turret-io/golapa/worker
 
