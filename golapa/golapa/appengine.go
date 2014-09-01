@@ -15,6 +15,7 @@ import (
 const sender = "<APPENGINE-EMAIL-SENDER>"
 const to = "<RECIPIENT>"
 const subject = "New signup"
+const template_path = "../../templates/"
 
 func init() {
 	http.Handle("/", newAppEngineHandler())
@@ -23,13 +24,13 @@ func init() {
 
 func newAppEngineHandler() (*AppEngineHandler) {
 	aeh := &AppEngineHandler{}
-	aeh.BaseHandler.TemplatePath = "../templates/"
+	aeh.BaseHandler.TemplatePath = template_path 
 	return aeh
 }
 
 func newAppEngineEmailHandler() (*AppEngineEmailer) {
 	aee := &AppEngineEmailer{}
-	aee.TemplatePath = "../templates/"
+	aee.TemplatePath = template_path 
 	return aee
 }
 
