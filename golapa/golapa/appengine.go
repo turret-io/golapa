@@ -16,6 +16,8 @@ const sender = "<APPENGINE-EMAIL-SENDER>"
 const to = "<RECIPIENT>"
 const subject = "New signup"
 const template_path = "../../templates/"
+const api_key = "<TURRET-IO-API-KEY>"
+const api_secret = "<TURRET-IO-API-SECRET>"
 
 func init() {
 	http.Handle("/", newAppEngineHandler())
@@ -90,6 +92,11 @@ func (aerh *AppEngineRequestHandler) Post(w http.ResponseWriter, r *http.Request
 	tpl.Lookup("post.tpl").Execute(w, data)
 }
 
+func newAppEngineTurretHandler() (*AppEngineTurret) {
+    aet := &AppEngineTurret{}
+    return aet
+}
+
 type AppEngineHandler struct {
 	BaseHandler
 }
@@ -97,3 +104,25 @@ type AppEngineHandler struct {
 func (aeh *AppEngineHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	aeh.BaseHandler.Serve(w, req, new(AppEngineRequestHandler))
 }
+
+type AppEngineTurret struct {
+    ctx appengine.Context
+}
+
+/*
+func (aet *AppEngineTurret) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+    // handle worker requests
+    ctx := appengine.NewContext(req)
+    aet.ctx = ctx
+    attr_map := make(map[string]string)
+    prop_map := make(map[string]string)
+    attr_map["contact_name"] = req.FormValue("name") 
+    attr_map["signedup"] = "2"
+    turret := turretIO.NewAppEngineTurretIO(api_key, api_secret, ctx)
+    inst := turretIO.NewUser(turret)
+    resp, err := inst.Set(req.FormValue("email"), attr_map, prop_map)
+    if err != nil {
+        aet.ctx.Errorf(err.Error())
+    }
+}
+*/
